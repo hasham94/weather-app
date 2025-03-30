@@ -7,7 +7,10 @@ export function useOpenMeteo() {
 
     const BASE_URL = `https://api.open-meteo.com/v1/forecast`;
 
-    const getWeatherData = async () => {
+    const getWeatherData = async (
+        latitude: '',
+        longitude: ''
+    ) => {
         weatherData.value = []
 
         const startDate = new Date();
@@ -17,8 +20,8 @@ export function useOpenMeteo() {
             endDate.setDate(endDate.getDate() + 7);
 
             const params = new URLSearchParams({
-                latitude: "39.3999",
-                longitude: "8.2245",
+                latitude: latitude,
+                longitude: longitude,
                 hourly: "temperature_2m",
                 start_date: startDate.toLocaleDateString('en-CA'),
                 end_date: endDate.toLocaleDateString('en-CA'),

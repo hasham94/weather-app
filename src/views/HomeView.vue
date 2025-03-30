@@ -31,9 +31,22 @@ fetchLocationData()
 
 <template>
   <main>
+
+        <input 
+          id="latitude" 
+          v-model.number="latitude"
+        />
+
+        <input 
+          id="longitude" 
+          v-model.number="longitude"
+        />
+        <button @click="fetchLocationData">Search</button>
+
+
     <button @click="getUserCurrentLocation">
-        current location
-      </button>
+      current location
+    </button>
 
     <div v-if="weatherData.length > 0">
       <HomeWeatherTable :weather-data="weatherData"/>
