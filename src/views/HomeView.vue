@@ -34,12 +34,20 @@ fetchLocationData()
 
         <input 
           id="latitude" 
-          v-model.number="latitude"
+          v-model.number="latitude" 
+          type="number" 
+          min="-90" 
+          max="90" 
+          step="0.0001"
         />
 
         <input 
           id="longitude" 
-          v-model.number="longitude"
+          v-model.number="longitude" 
+          type="number" 
+          min="-180" 
+          max="180" 
+          step="0.0001"
         />
         <button @click="fetchLocationData">Search</button>
 
