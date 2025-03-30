@@ -9,12 +9,32 @@ const { weatherData, getWeatherData } = useOpenMeteo();
 const latitude = ref(38.713);
 const longitude = ref(-9.139);
 
-getWeatherData(latitude.value, longitude.value)
+const fetchLocationData = () => {
+  getWeatherData(latitude.value, longitude.value)
+}
 
+const getUserCurrentLocation = () => {
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      latitude.value = position.coords.latitude;
+      longitude.value = position.coords.longitude;
+      fetchLocationData();
+    },
+    (err) => {
+      // TODO: error handling here
+    }
+  );
+}
+
+fetchLocationData()
 </script>
 
 <template>
   <main>
+    <button @click="getUserCurrentLocation">
+        current location
+      </button>
+
     <div v-if="weatherData.length > 0">
       <HomeWeatherTable :weather-data="weatherData"/>
     </div>
