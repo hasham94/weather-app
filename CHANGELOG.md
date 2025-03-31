@@ -7,3 +7,4 @@
     1. Add tailwind Css
     2. Add table layout
     3. Show More in case more then 1 day of data
+5. Show historical weather data with start and end date selection

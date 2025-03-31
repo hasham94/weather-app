@@ -11,18 +11,18 @@ export function useOpenMeteo() {
     const getWeatherData = async (
         location: Location,
         temprature?: string,
-        showHistoricalData?: string,
-        forecastDays?: number // by default 7 as in open-meteo
+        forecastDays?: number, // by default 7 as in open-meteo
+        durationStartDate?: Date,
+        durationEndDate?: Date
     ) => {
         weatherData.value = []
 
-        const startDate = new Date();
-        if (showHistoricalData) {
-            startDate.setDate(startDate.getDate() - (forecastDays || 7));
-        }
+        const startDate = durationStartDate ? new Date(durationStartDate) : new Date();
 
-        const endDate = new Date();
-        endDate.setDate(endDate.getDate() + (forecastDays || 7));
+        const endDate = durationEndDate ? new Date(durationEndDate) : new Date();
+        if (forecastDays) {
+            endDate.setDate(endDate.getDate() + (forecastDays - 1)); // doing -1 considering current date
+        }
 
         const params = new URLSearchParams({
             latitude: location.latitude,
