@@ -32,34 +32,24 @@ fetchLocationData()
 </script>
 
 <template>
-  <main>
+  <main class="flex flex-col gap-2 bg-gray-50 rounded">
+    <div class="flex flex-col items-start p-2">
+      <div class="flex gap-2">
+        <input class="bg-white px-3 py-2 w-48 max-w-full" id="latitude" v-model.number="latitude" type="number" min="-90"
+          max="90" step="0.0001" />
 
-        <input 
-          id="latitude" 
-          v-model.number="latitude" 
-          type="number" 
-          min="-90" 
-          max="90" 
-          step="0.0001"
-        />
+        <input class="bg-white px-3 py-2 w-48 max-w-full" id="longitude" v-model.number="longitude" type="number"
+          min="-180" max="180" step="0.0001" />
+        <button class="bg-gray-300 px-4 rounded" @click="fetchLocationData">Search</button>
+      </div>
 
-        <input 
-          id="longitude" 
-          v-model.number="longitude" 
-          type="number" 
-          min="-180" 
-          max="180" 
-          step="0.0001"
-        />
-        <button @click="fetchLocationData">Search</button>
-
-
-    <button @click="getUserCurrentLocation">
-      current location
-    </button>
+      <button @click="getUserCurrentLocation">
+        use current location
+      </button>
+    </div>
 
     <div v-if="weatherData.length > 0">
-      <HomeWeatherTable :weather-data="weatherData"/>
+      <HomeWeatherTable :weather-data="weatherData" />
     </div>
   </main>
 </template>
