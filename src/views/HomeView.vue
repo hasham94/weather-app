@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useOpenMeteo } from '@/composables/useOpenMeteo';
 import HomeWeatherTable from '@/components/home/HomeWeatherTable.vue';
+import { Location } from '@/domain/entities/Location';
 
 const { weatherData, getWeatherData } = useOpenMeteo();
 
@@ -10,7 +11,8 @@ const latitude = ref(38.713);
 const longitude = ref(-9.139);
 
 const fetchLocationData = () => {
-  getWeatherData(latitude.value, longitude.value)
+  const locationPointer = Location.create(latitude.value, longitude.value)
+  getWeatherData(locationPointer)
 }
 
 const getUserCurrentLocation = () => {
