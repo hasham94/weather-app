@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useOpenMeteo } from '@/composables/useOpenMeteo';
 import HomeWeatherTable from '@/components/home/HomeWeatherTable.vue';
+import HomeWeatherDaysSelect from '@/components/home/HomeWeatherDaysSelect.vue'
 import { Location } from '@/domain/entities/Location';
 import { formatedDate } from "@/utils/dateHelper"
 
@@ -12,6 +13,8 @@ const latitude = ref(38.713);
 const longitude = ref(-9.139);
 const startDate = ref<Date>(formatedDate(new Date()))
 const endDate = ref<Date>(formatedDate(new Date()))
+const showForecastedDate = ref<boolean>(true)
+const durationInDays = ref<number | null>(null)
 
 const fetchLocationData = () => {
   const locationPointer = Location.create(latitude.value, longitude.value)
@@ -31,6 +34,16 @@ const getUserCurrentLocation = () => {
     }
   );
 }
+
+watch([startDate, endDate], () => {
+  const locationPointer = Location.create(latitude.value, longitude.value)
+  getWeatherData(locationPointer, undefined, undefined, startDate.value as Date, endDate.value as Date)
+})
+
+watch(durationInDays, () => {
+  const locationPointer = Location.create(latitude.value, longitude.value)
+  getWeatherData(locationPointer, undefined, parseInt(durationInDays.value) || 7, undefined, undefined)
+})
 
 fetchLocationData()
 
@@ -52,11 +65,17 @@ fetchLocationData()
     </div>
 
     <div class="p-2">
-      <p class="mb-1">Time Interval</p>
-      <div class="flex gap-2">
+      <div class="flex items-center gap-2">
+        <p class="mb-1">Time:</p>
+        <button class="bg-white px-4 py-1 rounded cursor-pointer" @click="showForecastedDate = !showForecastedDate">
+          {{ `${showForecastedDate ? 'Show Time Interval' : 'Show Forecasted'}` }}</button>
+      </div>
+      <div class="flex gap-2 mt-2" v-if="!showForecastedDate">
         <input class="bg-white p-2 rounded w-48" type="date" v-model="startDate" />
         <input class="bg-white p-2 rounded w-48" type="date" v-model="endDate" />
       </div>
+      <HomeWeatherDaysSelect v-else v-model="durationInDays" />
+
     </div>
 
     <div v-if="weatherData.length > 0">
