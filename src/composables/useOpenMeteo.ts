@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { Weather } from '@/domain/entities/Weather';
 import { Temperature } from '@/domain/entities/Temprature';
+import { Location } from '@/domain/entities/Location';
 
 export function useOpenMeteo() {
     const weatherData = ref<Weather[]>([])
@@ -8,8 +9,7 @@ export function useOpenMeteo() {
     const BASE_URL = `https://api.open-meteo.com/v1/forecast`;
 
     const getWeatherData = async (
-        latitude: '',
-        longitude: ''
+        location: Location
     ) => {
         weatherData.value = []
 
@@ -20,8 +20,8 @@ export function useOpenMeteo() {
             endDate.setDate(endDate.getDate() + 7);
 
             const params = new URLSearchParams({
-                latitude: latitude,
-                longitude: longitude,
+                latitude: location.latitude,
+                longitude: location.longitude,
                 hourly: "temperature_2m",
                 start_date: startDate.toLocaleDateString('en-CA'),
                 end_date: endDate.toLocaleDateString('en-CA'),
