@@ -11,6 +11,7 @@ const { weatherData, getWeatherData } = useOpenMeteo();
 const latitude = ref(38.713);
 const longitude = ref(-9.139);
 const startDate = ref<Date>(formatedDate(new Date()))
+const endDate = ref<Date>(formatedDate(new Date()))
 
 const fetchLocationData = () => {
   const locationPointer = Location.create(latitude.value, longitude.value)
@@ -20,8 +21,9 @@ const fetchLocationData = () => {
 const getUserCurrentLocation = () => {
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      latitude.value = position.coords.latitude;
-      longitude.value = position.coords.longitude;
+      if (!position?.coords) return
+      latitude.value = parseFloat(position.coords.latitude?.toFixed(3));
+      longitude.value = parseFloat(position.coords.longitude?.toFixed(3));
       fetchLocationData();
     },
     (err) => {
@@ -49,8 +51,12 @@ fetchLocationData()
       </button>
     </div>
 
-    <div>
-      <input type="date" v-model="startDate" />
+    <div class="p-2">
+      <p class="mb-1">Time Interval</p>
+      <div class="flex gap-2">
+        <input class="bg-white p-2 rounded w-48" type="date" v-model="startDate" />
+        <input class="bg-white p-2 rounded w-48" type="date" v-model="endDate" />
+      </div>
     </div>
 
     <div v-if="weatherData.length > 0">
