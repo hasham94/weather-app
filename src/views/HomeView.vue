@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import { useOpenMeteo } from '@/composables/useOpenMeteo';
 import HomeWeatherTable from '@/components/home/HomeWeatherTable.vue';
 import HomeWeatherDaysSelect from '@/components/home/HomeWeatherDaysSelect.vue'
+import HomeWeatherChart from '../components/home/HomeWeatherChart.vue';
 import { Location } from '@/domain/entities/Location';
 import { formatedDate } from "@/utils/dateHelper"
 
@@ -15,6 +16,7 @@ const startDate = ref<Date>(formatedDate(new Date()))
 const endDate = ref<Date>(formatedDate(new Date()))
 const showForecastedDate = ref<boolean>(true)
 const durationInDays = ref<number>(7)
+const showChart = ref<boolean>(false)
 
 const fetchLocationData = () => {
   const locationPointer = Location.create(latitude.value, longitude.value)
@@ -84,8 +86,16 @@ fetchLocationData()
     <div v-if="loading">fetching...</div>
     <div v-if="error" class="p-2 text-red-500">{{ error }}</div>
 
-    <div v-if="weatherData.length > 0">
-      <HomeWeatherTable :weather-data="weatherData" />
+    <div v-if="weatherData.length > 0" class="p-4">
+      <button class="block cursor-pointer bg-white ml-auto w-48 py-2 border border-gray-400 rounded-full"
+        @click="showChart = !showChart">{{
+          showChart ?
+          'Grid' :
+          'Chart'
+        }}
+        View</button>
+      <HomeWeatherChart v-if="showChart" :weather-data="weatherData" />
+      <HomeWeatherTable v-else :weather-data="weatherData" />
     </div>
   </main>
 </template>
