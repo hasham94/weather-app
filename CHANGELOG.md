@@ -9,3 +9,4 @@
     3. Show More in case more then 1 day of data
 5. Show historical weather data with start and end date selection
 6. Add error handling when not valid request to open meteo
+7. Add chartjs to display weather data in chart

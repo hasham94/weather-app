@@ -31,12 +31,12 @@ export function useOpenMeteo() {
             }
 
             const params = new URLSearchParams({
-                latitude: location.latitude,
-                longitude: location.longitude,
+                latitude: location.latitude.toString(),
+                longitude: location.longitude.toString(),
                 hourly: "temperature_2m,precipitation",  //precipitation can be: rain, showers, snow
                 start_date: startDate.toLocaleDateString('en-CA'),
                 end_date: endDate.toLocaleDateString('en-CA'),
-                temperature_unit: temprature ?? "celsius",
+                temperature_unit: temprature ?? "celsius"
             });
 
             const response = await fetch(`${BASE_URL}?${params.toString()}`);

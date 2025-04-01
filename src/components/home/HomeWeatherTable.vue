@@ -13,12 +13,12 @@ const isCelsius = ref<boolean>(true)
 </script>
 
 <template>
-  <div v-if="weatherData.length > 0" class="p-4">
-    <div class="flex flex-end w-full justify-end">
-      <button @click="isCelsius = true" class="bg-white px-2 cursor-pointer"
-        :class="isCelsius ? 'border border-gray-300 rounded' : ''">Celsius</button>
+  <div v-if="weatherData.length > 0" class="border border-gray-200 mt-5 rounded p">
+    <div class="flex flex-end w-full justify-end mb-3 p-2">
+      <button @click="isCelsius = true" class="bg-white px-3 py-2 cursor-pointer"
+        :class="isCelsius ? 'border border-gray-400 rounded' : ''">Celsius</button>
       <button @click="isCelsius = false" class="bg-white px-2 cursor-pointer"
-        :class="!isCelsius ? 'border border-gray-300 rounded' : ''">Fahrenheit</button>
+        :class="!isCelsius ? 'border border-gray-400 rounded' : ''">Fahrenheit</button>
     </div>
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
