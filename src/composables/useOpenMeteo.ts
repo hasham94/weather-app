@@ -5,6 +5,8 @@ import { Location } from '@/domain/entities/Location';
 
 export function useOpenMeteo() {
     const weatherData = ref<Weather[]>([])
+    const loading = ref(false);
+    const error = ref<string | null>(null)
 
     const BASE_URL = `https://api.open-meteo.com/v1/forecast`;
 
@@ -15,32 +17,41 @@ export function useOpenMeteo() {
         durationStartDate?: Date,
         durationEndDate?: Date
     ) => {
-        weatherData.value = []
+        weatherData.value = [];
+        loading.value = true;
+        error.value = null;
 
-        const startDate = durationStartDate ? new Date(durationStartDate) : new Date();
 
-        const endDate = durationEndDate ? new Date(durationEndDate) : new Date();
-        if (forecastDays) {
-            endDate.setDate(endDate.getDate() + (forecastDays - 1)); // doing -1 considering current date
+        try {
+            const startDate = durationStartDate ? new Date(durationStartDate) : new Date();
+
+            const endDate = durationEndDate ? new Date(durationEndDate) : new Date();
+            if (forecastDays) {
+                endDate.setDate(endDate.getDate() + (forecastDays - 1)); // doing -1 considering current date
+            }
+
+            const params = new URLSearchParams({
+                latitude: location.latitude,
+                longitude: location.longitude,
+                hourly: "temperature_2m,precipitation",  //precipitation can be: rain, showers, snow
+                start_date: startDate.toLocaleDateString('en-CA'),
+                end_date: endDate.toLocaleDateString('en-CA'),
+                temperature_unit: temprature ?? "celsius",
+            });
+
+            const response = await fetch(`${BASE_URL}?${params.toString()}`);
+            const responseInJson = await response?.json();
+
+            if (responseInJson.error) {
+                throw new Error(responseInJson?.reason || 'Failed to fetch weather data')
+            }
+
+            weatherData.value = mapDateToTempratue(responseInJson)
+        } catch (err) {
+            error.value = err
+        } finally {
+            loading.value = false
         }
-
-        const params = new URLSearchParams({
-            latitude: location.latitude,
-            longitude: location.longitude,
-            hourly: "temperature_2m,precipitation",  //precipitation can be: rain, showers, snow
-            start_date: startDate.toLocaleDateString('en-CA'),
-            end_date: endDate.toLocaleDateString('en-CA'),
-            temperature_unit: temprature ?? "celsius",
-        });
-
-        const response = await fetch(`${BASE_URL}?${params.toString()}`);
-
-        if (!response.ok) {
-            return
-        }
-
-        const responseInJson = await response.json();
-        weatherData.value = mapDateToTempratue(responseInJson)
 
     }
 
@@ -67,6 +78,8 @@ export function useOpenMeteo() {
 
     return {
         weatherData,
-        getWeatherData
+        getWeatherData,
+        loading,
+        error
     };
 }
